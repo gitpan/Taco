@@ -3,3 +3,11 @@ Revision history for Perl extension Taco.
 0.01  Thu May 21 14:35:50 1998
 	- original version; created by h2xs 1.18
 
+0.02  Sun Aug  9 13:39:13 EDT 1998
+   - fixed up format of Makefile that caused a make error on Solaris
+     (thanks to Lupe Christoph).
+   
+   - made sure the t/httpd/create_reg.pl and t/httpd/create_conf.pl
+     scripts made their files owner-writable. (thanks to Lupe Christoph)
+   
+   - 

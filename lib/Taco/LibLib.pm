@@ -69,6 +69,8 @@ restart the server.
 To avoid this behavior, put LibLib::register($file); instead of require $file; 
 in your code.
 
+This is similar to Apache::StatInc, but for some reason I'm using this instead.
+
 =head1 DESCRIPTION
 
 =over 4

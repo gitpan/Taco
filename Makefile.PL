@@ -1,14 +1,23 @@
 use ExtUtils::MakeMaker;
 use strict;
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
 
-# These parameters are used to test Taco with a real Apache server
-my $HTTPD = "/usr/local/lib/forum/taco/httpd/tacod";
+# The following parameters are used to test Taco with a real Apache 
+# server.  See also the INSTALL document for more info.
+
+# Change this to the path to a mod_perl-enabled Apache web server.
+my $HTTPD = "/path/to/httpd";
+
+# The port the server will run on
 my $PORT = 8228;
+
+# The user the server will run as
 my $USER = 'http';
+
+# The group the server will run as
 my $GROUP = 'http';
 
+##########################################################################
+################ No need to change anything below here ###################
 ##########################################################################
 WriteMakefile(
   'NAME' => 'Taco',
@@ -39,8 +48,7 @@ kill_httpd:
 	\@\$(RM_F) t/httpd/taco.lock.*
 	kill `cat t/httpd/httpd.pid`
 	\$(RM_F) t/httpd/httpd.pid
-
-#	\$(RM_F) t/httpd/error_log
+	\$(RM_F) t/httpd/error_log
 
 # I'm trying to make it so that you can do "make test SAVE_ERRORS=1"
 # and then t/httpd/error_log won't be removed, but can't figure it out =(
@@ -61,7 +69,6 @@ start_httpd: pure_all test_pre_init
 rehttpd:   kill_httpd start_httpd
 
 run_tests:
-
 	\$(FULLPERL) t/TEST.pl $PORT
 
 test:	pure_all start_httpd run_tests kill_httpd

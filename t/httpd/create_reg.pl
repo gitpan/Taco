@@ -1,6 +1,7 @@
 my $dir = shift;
 
-open REG, ">./blib/lib/Taco/ServiceRegistry.pm" or die $!;
+my $file = "blib/lib/Taco/ServiceRegistry.pm";
+open REG, ">$file" or die $!;
 print REG <<EOF;
 
 package Taco::Services;
@@ -21,3 +22,5 @@ use Taco::DB;
 EOF
 
 close REG;
+
+chmod 0644, $file or warn "Couldn't 'chmod 0066 $file': $!";

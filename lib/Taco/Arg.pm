@@ -602,16 +602,25 @@ Taco::Arg.pm - Taco argument management
 
 =head1 SYNOPSIS
 
-This package has three sections:
+This module has three packages in it:
 
  Taco::ArgTable        -A class implementing a table of arguments
  Taco::ArgLayer        -A class implementing one layer in an ArgTable
  Taco::ArgUtil         -Utility functions for managing arguments
 
+ # In a Taco tag's implementation function:
+ my $flavor = $G::params->val('flavor');
+ my $shoe_size = $G::params->val('shoe_size', 'my_func'); # Look only in the
+                                                          # layer called "my_func"
+
 =head1 DESCRIPTION
 
 The Taco::Arg module contains classes that implement a table of arguments.
-It's somewhat like a 2-dimensional hash.
+It's somewhat like a 2-dimensional hash.  Whenever you put a [[&tag(arg=value)]] in a
+Taco template, Taco will parse the tag for you, put the arguments into the
+ArgTable (the global ArgTable is $G::params), and then run your function.  While your
+function is running, it has access to the $G::params object, which lets it get
+or set parameters, insert new ArgLayers, etc.
 
 =head1 The ArgTable Class
 

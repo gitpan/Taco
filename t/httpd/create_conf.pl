@@ -3,7 +3,8 @@ my $user = shift;
 my $group = shift;
 my $dir = shift;
 
-open (CONF, ">t/httpd/httpd.conf") or die $!;
+my $file = "t/httpd/httpd.conf";
+open (CONF, ">$file") or die $!;
 print CONF <<EOF;
 
 #Configuration directives specific to Taco
@@ -43,3 +44,5 @@ PerlModule Apache::Taco
 EOF
 
 close CONF;
+
+chmod 0644, $file or warn "Couldn't 'chmod 0644 $file': $!";
