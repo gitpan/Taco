@@ -1,0 +1,49 @@
+Hi,
+
+This is Taco.  It is a system originally designed to generate web
+pages with dynamic content, but it can be useful in other situations
+too - for example, you might want to use it to generate form letters
+or something.
+
+Taco is a framework that does query string & forms processing,
+argument passing, and template management.  It lets you write your own
+Perl code, put it in a "Taco module" (a Perl module that's a subclass
+of Taco::Module), and then call that code from inside a web page.
+
+Taco is completely TEMPLATE-DRIVEN, which means that once Taco is up
+and running, the HTML (or whatever) files themselves (called
+Templates) contain the function calls, and those function calls
+may get other Templates and parse them, and the whole business can get
+quite complex.  
+
+Here's an example of a very simple Template file:
+__________________________________
+Hello [[$user]], here is a list of people named Mortimer:<br>
+<ul>
+   [[ &list(driver=people first_name=Mortimer display_template=person_name) ]]
+</ul>
+Do you like the list?
+__________________________________
+
+The &list function happens to be a part of the Taco::DB package, not
+included with this distribution.  As of 8/6/98, it's not yet ready for
+release.  Please write me if you're interested in it.
+
+Taco ships with a sample Taco module called Taco::Generic which implements
+some generic functions useful in lots of templating situations.
+
+In my opinion, Taco is most useful for large-ish projects, such as
+maintaining a web-accessed database or running a fairly sophisticated
+set of interactive pages.  If you just want a few small Perl functions
+sprinkled in a web page, you might check out a different package.
+Alternatives include HTML::EmbPerl.pm, Apache::ePerl.pm, and even
+Apache's mod_perl server-side includes: <!--#perl sub="sub {print 2+2}" -->
+
+My conscience makes me say that Taco may change significantly -
+this is a very early version, after all =).
+
+See the INSTALL file for directions on how to install Taco.
+
+
+-Ken Williams
+ ken@forum.swarthmore.edu

@@ -1,0 +1,23 @@
+Various forms of Taco function syntax:
+
+[[&if( condition=1 true_text=true )]]
+[[ &if( condition=1 true_text=true ) ]]
+[[ &if(
+   condition=1
+   true_text=true
+) ]]
+[[&if("condition=1 true_text=true")]]
+[[ &if("condition=1 true_text=true") ]]
+[[&if(condition='1' true_text='true')]]
+[[&if( condition=1 true_text='\'true\'' )]]
+[[&if condition=1 true_text=true ]]
+[[&if
+  condition=1
+  true_text=true
+]]
+[[&if]]
+[[&if condition=1 true_text="some \" stuff" ]]
+[[&if condition=1 true_text="some \\" ]]
+[[ &if (condition=1 true_text=true) ]]
+
+Done.

@@ -1,0 +1,6 @@
+Here are some functions:
+
+[[&parse(parse_template=tmpl1 coconut=pie)]],
+[[&parse(parse_template=tmpl1 coconut=tasty)]]
+
+And here is some more text.

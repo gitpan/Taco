@@ -1,0 +1,5 @@
+Here are some functions:
+
+[[&if(condition=1 true_template='args' false_text=boo_hoo)]]
+
+And here is some more text.

@@ -1,0 +1,6 @@
+Here are some functions:
+
+[[&if(condition='1' true_text=true false_text=false)]],
+[[&if(condition='0+0' true_text=true false_text=false)]]
+
+And here is some more text.

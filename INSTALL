@@ -1,0 +1,40 @@
+To install Taco, do this:
+
+   perl Makefile.PL *
+   make
+   make test
+   make install
+   <in site_perl/Taco, copy ServiceRegistry_dist.pm to ServiceRegistry.pm> **
+
+If that really doesn't work for you, you could theoretically just copy
+the Perl files from lib/ into your Perl library directory, because so
+far Taco is all regular Perl, no C extensions or any of that stuff.
+But it's best if you go through the above process.
+
+The installation process will install the Taco.pm module, a bunch of
+Taco::*.pm modules, and Apache::Taco.pm.
+
+Taco probably only works on Unix.  It's been tested under Digital Unix
+and Linux.
+
+Please see the documentation for Apache::Taco for information on how to
+make Taco pages and serve them under Apache's mod_perl.
+
+-Ken Williams
+ ken@forum.swarthmore.edu
+
+
+* The "make test" step will attempt to actually start up a real
+mod_perl-enabled Apache server and serve some Taco pages using it.  To
+get this to work, you'll need to edit Makefile.PL and change the first
+few variables - they tell Taco where to find an Apache server, what
+port to run the test server on, and what user & group to run the
+server as.  You may need to run the "make test" step as root.
+
+** If this is the first time you're installing Taco, you should copy
+the Taco/ServiceRegistry_dist.pm file to Taco/ServiceRegistry.pm, and
+then create some services.  This step is necessary so that upgrading
+or reinstalling Taco won't overwrite your existing ServiceRegistry.pm
+file.  See "perldoc Taco::ServiceRegistry" for more info.
+
+

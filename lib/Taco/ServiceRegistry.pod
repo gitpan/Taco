@@ -1,0 +1,55 @@
+=head1 NAME
+
+Taco::ServiceRegistry - Definitions of Taco services
+
+=head1 SYNOPSIS
+
+ # In Taco/ServiceRegistry.pm:
+    $root_dir = "/wherever/you/want";
+
+    %registry = (
+      "your_service" => {
+        "Modules" => [ qw(Core TacoDB) ],  # The modules this service uses - required
+        "TemplatePath" => ["$root_dir/your_service/templates", "/etc/templates"],
+        "Taco::DB_config" => "$root_dir/your_service/config.pl",  # Add entries that your modules
+                                                                  # need to have
+      },
+      ...
+    );
+
+=head1 DESCRIPTION
+
+The Taco::ServiceRegistry.pm file contains configuration information about
+the various Taco services you define.  Each key in the %registry hash
+is the name of a Taco service, and the value is an anonymous hash of various
+attributes of the service.
+
+The "Modules" attribute is currently the only required attribute - it
+specifies which Taco modules the service uses.
+
+The "ServiceDir" attribute will be used to fill in other default
+settings, such as "TemplatePath".  If you don't set it, it will be
+given a default value of C<"$root_dir/$service"> (where $service is
+the name of the service being defined).
+
+The "TemplatePath" attribute is not required, but if it is not given, a
+default value of C<["$ServiceDir/templates"]> will be used (where
+$ServiceDir is the value of the "ServiceDir" attribute).
+
+These three attributes are currently the only attributes known by Taco
+- all other attributes are the property of specific modules.  For
+instance, the Taco::DB module needs a "Taco::DB_config" attribute, a
+"Taco::DB_data_dir" attribute, and so on.  It can set default values
+for these attributes based on the values of the ServiceDir attributes,
+etc.  Please read the documentation for the modules you want to use to
+see what information they require in the ServiceRegistry.
+
+=head1 AUTHOR
+
+Ken Williams (ken@forum.swarthmore.edu)
+
+=head1 SEE ALSO
+
+perl(1), Taco(3)
+
+=cut

@@ -1,0 +1,7 @@
+Blah Blah ...
+
+[[&set(name=var value=plunk)]]
+[[&if(condition='$var eq "plunk"' true_text=plunker false_text=no_plunk)]]
+[[&if(condition='$var eq "swish"' true_text=swisher false_text=no_swish)]]
+
+Blah Blah ....
