@@ -46,7 +46,7 @@ test_pre_init:
 	\$(FULLPERL) t/httpd/create_reg.pl $dir
 
 kill_httpd:
-	\@\$(RM_F) t/httpd/taco.lock.*
+	\$(RM_F) t/httpd/httpd.lock.*
 	kill `cat t/httpd/httpd.pid`
 	\$(RM_F) t/httpd/httpd.pid
 	\$(RM_F) t/httpd/error_log

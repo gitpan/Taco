@@ -8,7 +8,7 @@ open (CONF, ">$file") or die $!;
 print CONF <<EOF;
 
 #Configuration directives specific to Taco
-#This file is created by the create_conf.pl script.
+#This file is created by the $0 script.
 
 Port $port
 User $user
@@ -23,6 +23,7 @@ ResourceConfig httpd/srm.conf
 TypesConfig /dev/null
 TransferLog /dev/null
 ScoreBoardFile /dev/null
+LockFile httpd/httpd.lock
 
 AddType text/html .html
 

@@ -19,80 +19,83 @@ sub handler {
 	my $filename = $G::r->filename;
 	my $debug = (lc $G::r->dir_config('TacoDebug') eq 'true');
 
-# Wrap the whole deal here in an eval to catch errors
-my $result = eval {
-
-	%ENV = $G::r->cgi_env;
-
-	warn ("[$$]file: $filename\n") if $debug;
-	&Taco::LibLib::freshen;
-
-	&Taco::Init::make_argtable($G::r->dir_config('TacoService'), $G::r->connection->user);
-	my $page_out = new Taco::Template();
-
-
-	if (lc $G::r->dir_config('TacoCGI') eq 'true') {
-		
-		unless (-e $filename) {
-			$G::r->log_error("$filename not found");
-			return NOT_FOUND;
-		}
-		
-		unless (-x $filename) {
-			$G::r->log_error("Execution of $filename denied");
-			return FORBIDDEN;
-		}
-		
-		# Run the perl code in the file
-		package main;
-		do $filename;
-		package Apache::Taco;
-
-		die $@ if $@;
-		return OK;
-	}
-
-
-	# Interpret the file as a template web page
-	my ($notaco_host, $ssi_mod);
-	if ($notaco_host = $G::r->dir_config('TacoRelayHost')) {
-		my $ua = new LWP::UserAgent;
-		my $req = new HTTP::Request;
-
-		# Try getting the username and password from the user:
-		my ($protected_if_zero, $remote_passwd) = $G::r->get_basic_auth_pw;
-		if ($protected_if_zero == 0) {
-			$req->authorization_basic($G::r->connection->user, $remote_passwd);
-		}
-		
-		my $url = $notaco_host . $G::r->uri();
-		$req->url($url);
-		$req->method('GET');
+	# Wrap the whole deal here in an eval to catch errors
+	my $result = eval {
 	
-		my $response = $ua->request($req);
-		if ($response->is_success) {
-			$G::r->send_http_header();
-
-			$page_out->set_text( $response->content );
-			$page_out->interpret_and_print();
-		} else {
-			$G::r->log_error("Couldn't fetch $url from remote server '$notaco_host'");
-			print $response->error_as_HTML();
+		%ENV = $G::r->cgi_env;
+	
+		warn ("[$$]file: $filename\n") if $debug;
+		&Taco::LibLib::freshen;
+	
+		&Taco::Init::make_argtable($G::r->dir_config('TacoService'), $G::r->connection->user);
+		my $page_out = new Taco::Template();
+	
+		$G::r->content_type('text/html');
+	
+		if (lc $G::r->dir_config('TacoCGI') eq 'true') {
+			
+			unless (-e $filename) {
+				$G::r->log_error("$filename not found");
+				return NOT_FOUND;
+			}
+			
+			unless (-x $filename) {
+				$G::r->log_error("Execution of $filename denied");
+				return FORBIDDEN;
+			}
+			
+			# Run the perl code in the file
+			warn "About to 'do $filename'" if $debug;
+			package main;
+			do $filename;
+			package Apache::Taco;
+	
+			die $@ if $@;
+			return OK;
 		}
+	
+	
+		# Interpret the file as a template web page
+		my ($notaco_host, $ssi_mod, $buffer);
+		if ($notaco_host = $G::r->dir_config('TacoRelayHost')) {
+			my $ua = new LWP::UserAgent;
+			my $req = new HTTP::Request;
+	
+			# Try getting the username and password from the user:
+			my ($protected_if_zero, $remote_passwd) = $G::r->get_basic_auth_pw;
+			if ($protected_if_zero == 0) {
+				$req->authorization_basic($G::r->connection->user, $remote_passwd);
+			}
+			
+			my $url = $notaco_host . $G::r->uri();
+			$url = "http://$url" unless $url =~ m#^\w+://#;
+			$req->url($url);
+			$req->method('GET');
 		
-	} elsif ($ssi_mod = $G::r->dir_config('TacoFilterMod')) {
-		# Use a Perl module to parse the SSI
-		my $p = $ssi_mod->new($G::r);
-		$page_out->set_text( $p->output );
-		$page_out->interpret_and_print();
-
-	} else {
-		# The direct method:
-		$page_out->get_file( $filename );
-		$page_out->output();
-	}
-	return OK;
-}; # End of eval{}
+			my $response = $ua->request($req);
+			if ($response->is_success) {
+				$G::r->send_http_header();
+	
+				$page_out->set_text( $response->content );
+				$page_out->output($buffer);
+			} else {
+				$G::r->log_error("Couldn't fetch '$url' for TacoRelayHost");
+				print $response->error_as_HTML();
+			}
+			
+		} elsif ($ssi_mod = $G::r->dir_config('TacoFilterMod')) {
+			# Use a Perl module to parse the SSI
+			my $p = $ssi_mod->new($G::r);
+			$page_out->set_text( $p->output );
+			$page_out->output($buffer);
+	
+		} else {
+			# The direct method:
+			$page_out->get_file( $filename );
+			$page_out->output($buffer);
+		}
+		return OK;
+	}; # End of eval{}
 
 	$G::r->log_error("$filename: $@") if $@;
 
@@ -113,7 +116,7 @@ sub show_memory {
 
 sub cleanup_globals {
 	# Get rid of global objects:
-	%G::SHARED = ();
+	%Taco::SHARED = ();
 }
 
 1;
@@ -195,7 +198,7 @@ because it will be called like this:
     # Pass the filename and the current Apache::Request object
     my $p = MyPackage::filter->new($filename, $G::r); 
     $template->set_text( $p->output );
-    $template->interpret_and_print();
+    $template->output($buffer);
 
 It's possible that the TacoFilterMod capability can be better implemented by
 using an Apache::OutputChain, but I don't know much about that yet.

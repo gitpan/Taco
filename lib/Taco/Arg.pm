@@ -89,9 +89,7 @@ sub new_temp {
 	(tied %{$self->{layers}})->insert($new_name, $new_value, $after_layer);
 	
 	# Fill 'er up
-	while ( @_ ) {
-		$self->{layers}{$new_name}->add_arg( splice @_, 0, 2 );
-	}
+	$self->{layers}{$new_name}->add_arg( @_ );
 
 	return new Taco::ArgLayerName($new_name, $self);
 }
@@ -302,7 +300,7 @@ sub set_arg {
 	while (@_) {
 		$name = shift;
 		$val = shift;
-		$self->{$name} = (ref $val ? [ $val ] : [ {'val' => $val} ]);
+		$self->{$name} = (ref($val) eq 'HASH' ? [ $val ] : [ {'val' => $val} ]);
 	}
 }
 
@@ -321,7 +319,7 @@ sub add_arg {
 	while (@_) {
 		$name = shift;
 		$val = shift;
-		push @{$self->{$name}}, (ref $val ? $val : {'val' => $val});
+		push @{$self->{$name}}, (ref($val) eq 'HASH' ? $val : {'val' => $val});
 	}
 }
 
@@ -413,10 +411,9 @@ sub _access {
 	if ($att =~ s/s$//) {
 		return map( $_->{$att}, @{ $self->{$key} } );
 	} else {
-#		print STDERR "Returning $self->{$key}[-1]{$att}\n";
+#		warn "Returning $self->{$key}[-1]{$att}\n";
 		return $self->{$key}[-1]{$att};
 	}
-
 }
 
 
@@ -657,11 +654,13 @@ of layers to look in.
 
 =item * $table->set_arg(layer, key, value, key, value, ...)
 
-Sets the given keys to the given values in the given layer.  See also ArgLayer::set_arg.
+Sets the given keys to the given values in the given layer.  Passes the real work
+to Taco::ArgLayer::set_arg.
 
 =item * $table->add_arg(layer, key, value, key, value, ...)
 
-Adds the given keys, with the given values, to the given layer.  See also ArgLayer::add_arg.
+Adds the given keys, with the given values, to the given layer.  Passes the real
+work to Taco::ArgLayer::add_arg.
 
 =item * $table->layer_names
 
@@ -863,8 +862,14 @@ C<$key> in the ArgLayer.
 
 =item * $layer->set_arg('name', {val=>...}, name, value, ...)
 
-Sets the values of the given keys in the ArgLayer.  Clears all args in this layer with these names!
-The named nodes don't have to exist already.  See also add_arg() and merge().
+Sets the values of the given keys in the ArgLayer.  Clears all args in this layer
+with these names! The named nodes don't have to exist already.  If a value is a
+hash reference, it will be assumed that you're passing a fully-formed argument
+node, such as the output of the &Taco::ArgUtil::parse function.  Otherwise we'll
+assume that you're passing just the value, and we'll wrap it in a hash to make it
+an argument node.
+
+See also add_arg() and merge().
 
 
 
@@ -873,7 +878,12 @@ The named nodes don't have to exist already.  See also add_arg() and merge().
 =item * $layer->add_arg('name', {val=>...}, name, value, ...)
 
 Adds these args to the end of this layer's given nodes.   There don't have to be
-nodes with these names already.  See also set_arg() and merge().
+nodes with these names already.  If a value is a hash reference, it will be
+assumed that you're passing a fully-formed argument node, such as the output of
+the &Taco::ArgUtil::parse function.  Otherwise we'll assume that you're passing
+just the value, and we'll wrap it in a hash to make it an argument node.
+
+See also set_arg() and merge().
 
 
 

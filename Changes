@@ -22,5 +22,14 @@ Revision history for Perl extension Taco.
      takes precedence.
    
    - Fixed t/httpd/create_reg.pl, which tried to load the nonpresent
-     module Taco::DB.
+     module Taco::DB.  (thanks to Gary Ashton-Jones)
 
+0.04
+   - Fixed a couple of porting bugs in the TacoRelayHost section of
+     Apache::Taco.pm that prevented TacoRelayHost from working.
+   
+   - Taco::ArgLayer::set_arg and Taco::ArgLayer::add_arg now explicitly
+     look for a HASH reference when deciding whether to wrap incoming values
+     in a hash reference - previously they just looked for any kind of
+     reference.
+   

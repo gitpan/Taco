@@ -4,7 +4,7 @@ use strict;
 package Taco::LibLib;
 
 my %CODEFILES; # What files are registered
-my %TIMES;     # The time of last slurpage of each file
+my %TIMES;     # The time of last slurpage for each file
 my $debug = 0;
 
 
@@ -33,7 +33,9 @@ sub freshen {
 	foreach $file (keys %CODEFILES) {
 
 		unless (-e $INC{$file}) {
-			# It's been removed, try to re-register (might have been moved)
+			# It's been moved or removed
+			warn "$file no longer exists at $INC{$file}, will try to re-register" if $debug;
+			warn "cwd is ", `pwd` if $debug;
 			delete $INC{$file};
 			delete $CODEFILES{$file};
 			&register($file);
@@ -41,7 +43,7 @@ sub freshen {
 		$last_mod = (stat $INC{$file})[9];
 		
 		if ($last_mod > $TIMES{$file}) {
-			print STDERR ("[$$] recompiling $INC{$file}, last touched at $last_mod\n") if $debug;
+			warn "[$$] recompiling $INC{$file}, last touched at $last_mod" if $debug;
 			delete $INC{$file};
 
 			&get($file);
