@@ -195,7 +195,7 @@ sub to_hash {
 	my $name_only = shift;
 	my @returns;
 	
-	foreach my $layer ($self->layer_names) {
+	foreach my $layer (reverse $self->layer_names) {
 		push @returns, $self->{layers}{$layer}->to_hash($name_only);
 	}
 	return @returns;

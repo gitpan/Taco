@@ -10,4 +10,17 @@ Revision history for Perl extension Taco.
    - made sure the t/httpd/create_reg.pl and t/httpd/create_conf.pl
      scripts made their files owner-writable. (thanks to Lupe Christoph)
    
-   - 
+   - rewrote the INSTALL document so that it's clearer (hopefully).
+   
+   - wrote a summary of the documentation in the various modules
+     in the distribution - see the summary by doing "perldoc Taco".
+     (thanks to Gerald Richter)
+
+0.03
+   - Taco::ArgTable->to_hash now behaves correctly when a parameter
+     is in more than one layer: the parameter in the top layer
+     takes precedence.
+   
+   - Fixed t/httpd/create_reg.pl, which tried to load the nonpresent
+     module Taco::DB.
+

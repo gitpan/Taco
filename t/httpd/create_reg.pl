@@ -5,7 +5,7 @@ open REG, ">$file" or die $!;
 print REG <<EOF;
 
 package Taco::Services;
-use Taco::DB;
+use Taco::Generic;
 
 \$root_dir = "$dir/t";
 

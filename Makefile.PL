@@ -5,7 +5,8 @@ use strict;
 # server.  See also the INSTALL document for more info.
 
 # Change this to the path to a mod_perl-enabled Apache web server.
-my $HTTPD = "/path/to/httpd";
+my $HTTPD = "/usr/local/lib/forum/taco/httpd/tacod";
+#my $HTTPD = "/path/to/httpd";
 
 # The port the server will run on
 my $PORT = 8228;

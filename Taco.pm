@@ -1,4 +1,4 @@
-$Taco::VERSION = '0.02';
+$Taco::VERSION = '0.03';
 
 use Taco::LibLib;
 use Taco::Dispatcher;
